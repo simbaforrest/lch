@@ -30,7 +30,7 @@ public:
 	inline FullFile& operator<<(std::string other) {
 		if (other.empty())
 			return *this;
-		if (out.empty() || out.back()==filesep || other.front()==filesep)
+		if (out.empty() || out[out.length()-1]==filesep || other[0]==filesep)
 			out += other;
 		else
 			out += filesep + other;
@@ -47,7 +47,7 @@ inline void fileparts(const std::string& str, std::string* pPath=0,
 {
 	std::string::size_type last_sep = str.find_last_of(filesep);
 	std::string::size_type last_dot = str.find_last_of('.');
-	if (last_dot<last_sep) // "D:\parent\child.folderA\file", "D:\parent\child.folderA\"
+	if (last_sep!=std::string::npos && last_dot<last_sep) // "D:\parent\child.folderA\file", "D:\parent\child.folderA\"
 		last_dot = std::string::npos;
 
 	std::string path, name, ext;
