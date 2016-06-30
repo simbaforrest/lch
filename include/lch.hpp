@@ -1,6 +1,10 @@
 #pragma once
 
 // 1-st Level Headers
+#pragma warning( push )
+# pragma warning (disable:4996)
+#include "global_ini.hpp"
+#pragma warning( pop )
 #include "Singleton.hpp"
 #include "StringHelper.hpp"
 #include "IOHelper.hpp"
@@ -11,6 +15,7 @@
 #include "ConfigHelper.hpp" // Singleton StringHelper IOHelper DirHelper
 
 namespace helper {
+using namespace global_ini;
 using namespace StringHelper;
 using namespace IOHelper;
 

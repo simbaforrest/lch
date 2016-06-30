@@ -137,6 +137,7 @@ inline std::string getFileDir(const std::string &fileName)
 {
 	std::string path;
 	fileparts(fileName, &path);
+	if (path.length() == 0) path = ".";
 	return path;
 }
 
