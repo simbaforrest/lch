@@ -5,7 +5,7 @@
  *   Turn off all log by defining SUPPRESS_LOG.
  *
  * Dynamically control log level by setting:
- *   LogHelper::GLogControl::Instance().level
+ *   LogHelper::GetOrSetLogLevel()
  * to following four types:
  *   LogHelper::LOG_QUIET -> completely quiet
  *   LogHelper::LOG_ERROR -> only log error
@@ -37,8 +37,6 @@
 #endif
 #include <time.h>
 
-#include "Singleton.hpp"
-
 namespace LogHelper {
 
 	inline std::string getCurrentTimeString() {
@@ -53,16 +51,18 @@ namespace LogHelper {
 		LOG_DEBUG=3
 	};
 
-	struct Control {
-		int level;
-		Control() : level(LOG_INFO) {}
-	};
-	typedef helper::Singleton<Control> GLogControl;
+	inline int GetOrSetLogLevel(const int l=-1)
+	{
+		static int level = LOG_INFO;
+		if(l<0) return level;
+		level = l;
+		return level;
+	}
 
-#define is_log_quiet  (LogHelper::GLogControl::Instance().level<=LogHelper::LOG_QUIET)
-#define is_error_log  (LogHelper::GLogControl::Instance().level>=LogHelper::LOG_ERROR)
-#define is_info_log   (LogHelper::GLogControl::Instance().level>=LogHelper::LOG_INFO)
-#define is_debug_log  (LogHelper::GLogControl::Instance().level>=LogHelper::LOG_DEBUG)
+#define is_log_quiet  (LogHelper::GetOrSetLogLevel()<=LogHelper::LOG_QUIET)
+#define is_error_log  (LogHelper::GetOrSetLogLevel()>=LogHelper::LOG_ERROR)
+#define is_info_log   (LogHelper::GetOrSetLogLevel()>=LogHelper::LOG_INFO)
+#define is_debug_log  (LogHelper::GetOrSetLogLevel()>=LogHelper::LOG_DEBUG)
 
 #ifndef SUPPRESS_LOG
 
