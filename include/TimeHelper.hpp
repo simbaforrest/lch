@@ -3,8 +3,9 @@
 #ifdef OPENCV_FOUND
 	#include "opencv2/opencv.hpp"
 #else// OPENCV_FOUND
+	#include "stdint.h"
 	#if defined WIN32 || defined _WIN32 || defined WINCE
-		#include "Winnt.h"
+		#include "Windows.h"
 	#elif defined __linux || defined __linux__
 		#include <time.h>
 	#elif defined __MACH__ && defined __APPLE__
@@ -12,28 +13,30 @@
 	#endif
 #endif//OPENCV_FOUND
 
+#include <string>
+
 namespace TimeHelper {
 #ifdef OPENCV_FOUND
 	using cv::getTickCount;
 	using cv::getTickFrequency;
 #else
-	inline int64 getTickCount(void)
+	inline int64_t getTickCount(void)
 	{
 	#if defined WIN32 || defined _WIN32 || defined WINCE
 		LARGE_INTEGER counter;
 		QueryPerformanceCounter( &counter );
-		return (int64)counter.QuadPart;
+		return (int64_t)counter.QuadPart;
 	#elif defined __linux || defined __linux__
 		struct timespec tp;
 		clock_gettime(CLOCK_MONOTONIC, &tp);
-		return (int64)tp.tv_sec*1000000000 + tp.tv_nsec;
+		return (int64_t)tp.tv_sec*1000000000 + tp.tv_nsec;
 	#elif defined __MACH__ && defined __APPLE__
-		return (int64)mach_absolute_time();
+		return (int64_t)mach_absolute_time();
 	#else
 		struct timeval tv;
 		struct timezone tz;
 		gettimeofday( &tv, &tz );
-		return (int64)tv.tv_sec*1000000 + tv.tv_usec;
+		return (int64_t)tv.tv_sec*1000000 + tv.tv_usec;
 	#endif
 	}
 
@@ -110,7 +113,7 @@ namespace TimeHelper {
 		inline double toc() {
 			return ((double)getTickCount() - startTick) / getTickFrequency() * scale;
 		}
-		inline double toc(std::string tag) {
+		inline double toc(const std::string& tag) {
 			double time = toc();
 			std::cout << tag << " " << time << unit_name() << std::endl;
 			return time;
@@ -126,7 +129,7 @@ namespace TimeHelper {
 			tic();
 			return ret;
 		}
-		inline double toctic(std::string tag) {
+		inline double toctic(const std::string& tag) {
 			double time = toctic();
 			std::cout << tag << " " << time << unit_name() << std::endl;
 			return time;
