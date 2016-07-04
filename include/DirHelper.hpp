@@ -7,6 +7,12 @@
 #include <algorithm> //std::replace
 #include <stdlib.h> //getenv
 
+#ifdef __linux
+#include <unistd.h> //getCurrentDir
+#elif _WIN32
+#include <direct.h> //getCurrentDir
+#endif
+
 #include "StringHelper.hpp"
 
 namespace DirHelper
@@ -92,7 +98,6 @@ inline void fileparts(const std::string& str, std::string* pPath=0,
 }
 
 #ifdef __linux
-#include <unistd.h>
 inline std::string getCurrentDir()
 {
 	char cwd[FILENAME_MAX];
@@ -101,7 +106,6 @@ inline std::string getCurrentDir()
 }
 
 #elif _WIN32
-#include <direct.h>
 inline std::string getCurrentDir()
 {
 	char* pcwd;
@@ -180,7 +184,9 @@ inline std::string getFileExtensionWithDot(const std::string &fileName)
 //legalDir(dir) returns "./data/"
 inline std::string &legalDir(std::string &dir)
 {
-	if(*dir.rbegin()!=filesep) {
+	if(dir.empty()) {
+		dir = "." + filesep;
+	} else if(*dir.rbegin()!=filesep) {
 		dir.push_back(filesep);    //ensure last char==sep
 	}
 	return dir;
