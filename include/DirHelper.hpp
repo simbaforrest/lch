@@ -68,8 +68,7 @@ inline void fileparts(const std::string& str, std::string* pPath=0,
 		if (last_dot == std::string::npos) { // "test"
 			name = str2;
 			ext = "";
-		}
-		else { // "test.txt"
+		} else { // "test.txt"
 			name = str2.substr(0, last_dot);
 			ext = str2.substr(last_dot + 1);
 		}
@@ -79,8 +78,7 @@ inline void fileparts(const std::string& str, std::string* pPath=0,
 		if (last_dot == std::string::npos) { // "d:/parent/test", "d:/parent/child/"
 			name = str2.substr(last_sep + 1);
 			ext = "";
-		}
-		else { // "d:/parent/test.txt"
+		} else { // "d:/parent/test.txt"
 			name = str2.substr(last_sep + 1, last_dot - last_sep - 1);
 			ext = str2.substr(last_dot + 1);
 		}
@@ -136,12 +134,26 @@ inline std::vector<std::string> getEnvPath()
 	return StringHelper::split(path,delim);
 }
 
+//make sure dir ends with '/' or '\\', if not, modify it. e.g.:
+//string dir = "./data";
+//legalDir(dir) returns "./data/"
+inline std::string &legalDir(std::string &dir)
+{
+	if(dir.empty()) {
+		dir = "." + filesep;
+	} else if(*dir.rbegin()!=filesep) {
+		dir.push_back(filesep);    //ensure last char==sep
+	}
+	return dir;
+}
+
 //"D:/test/test.txt" -> "D:/test/"
 inline std::string getFileDir(const std::string &fileName)
 {
 	std::string path;
 	fileparts(fileName, &path);
 	if (path.length() == 0) path = ".";
+	legalDir(path);
 	return path;
 }
 
@@ -177,19 +189,6 @@ inline std::string getFileExtensionWithDot(const std::string &fileName)
 	fileparts(fileName, 0, 0, &ext);
 	ext = "." + ext;
 	return ext;
-}
-
-//make sure dir ends with '/' or '\\', if not, modify it. e.g.:
-//string dir = "./data";
-//legalDir(dir) returns "./data/"
-inline std::string &legalDir(std::string &dir)
-{
-	if(dir.empty()) {
-		dir = "." + filesep;
-	} else if(*dir.rbegin()!=filesep) {
-		dir.push_back(filesep);    //ensure last char==sep
-	}
-	return dir;
 }
 
 inline bool isAbsolutePath(const std::string &path)
