@@ -140,7 +140,7 @@ inline std::vector<std::string> getEnvPath()
 inline std::string &legalDir(std::string &dir)
 {
 	if(dir.empty()) {
-		dir = "." + filesep;
+		dir = std::string(".") + filesep;
 	} else if(*dir.rbegin()!=filesep) {
 		dir.push_back(filesep);    //ensure last char==sep
 	}
