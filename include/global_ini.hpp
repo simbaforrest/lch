@@ -44,7 +44,7 @@ namespace IniHelper {
 	inline bool iniLoad(const std::string &iniFileName) {
 		static std::map<std::string, std::string>& ini = get_ini();
 		std::cout << "[iniLoad] try from: " << iniFileName << std::endl;
-		std::ifstream in(iniFileName);
+		std::ifstream in(iniFileName.c_str());
 		if(!in.is_open()) {
 			std::cout<<"... but not found!"<<std::endl;
 			return false;
